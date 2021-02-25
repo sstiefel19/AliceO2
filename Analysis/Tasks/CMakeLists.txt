@@ -10,12 +10,12 @@
 
 add_subdirectory(PWGCF)
 add_subdirectory(PWGDQ)
+add_subdirectory(PWGGA)
 add_subdirectory(PWGHF)
 add_subdirectory(PWGJE)
 add_subdirectory(PWGLF)
 add_subdirectory(PWGUD)
 add_subdirectory(ALICE3)
-add_subdirectory(SkimmingTutorials)
 
 
 o2_add_dpl_workflow(trackextension
@@ -33,38 +33,18 @@ o2_add_dpl_workflow(trackqa
                     PUBLIC_LINK_LIBRARIES O2::Framework O2::AnalysisDataModel O2::AnalysisCore
                     COMPONENT_NAME Analysis)
 
+o2_add_dpl_workflow(qatask
+                    SOURCES qaTask.cxx
+                    PUBLIC_LINK_LIBRARIES O2::Framework O2::AnalysisDataModel O2::AnalysisCore
+                    COMPONENT_NAME Analysis)
+
 o2_add_dpl_workflow(pid-tof
                     SOURCES pidTOF.cxx
                     PUBLIC_LINK_LIBRARIES O2::Framework O2::DetectorsBase O2::AnalysisDataModel O2::AnalysisCore
                     COMPONENT_NAME Analysis)
 
-o2_add_dpl_workflow(pid-tof-qa
-                    SOURCES pidTOFqa.cxx
-                    PUBLIC_LINK_LIBRARIES O2::Framework O2::DetectorsBase O2::AnalysisDataModel O2::AnalysisCore
-                    COMPONENT_NAME Analysis)
-
-o2_add_dpl_workflow(pid-tof-split
-                    SOURCES pidTOF_split.cxx
-                    PUBLIC_LINK_LIBRARIES O2::Framework O2::DetectorsBase O2::AnalysisDataModel O2::AnalysisCore
-                    COMPONENT_NAME Analysis)
-
-o2_add_dpl_workflow(pid-tof-tiny
-                    SOURCES pidTOF_tiny.cxx
-                    PUBLIC_LINK_LIBRARIES O2::Framework O2::DetectorsBase O2::AnalysisDataModel O2::AnalysisCore
-                    COMPONENT_NAME Analysis)
-
 o2_add_dpl_workflow(pid-tpc
                     SOURCES pidTPC.cxx
-                    PUBLIC_LINK_LIBRARIES O2::Framework O2::DetectorsBase O2::AnalysisDataModel O2::AnalysisCore
-                    COMPONENT_NAME Analysis)
-
-o2_add_dpl_workflow(pid-tpc-split
-                    SOURCES pidTPC_split.cxx
-                    PUBLIC_LINK_LIBRARIES O2::Framework O2::DetectorsBase O2::AnalysisDataModel O2::AnalysisCore
-                    COMPONENT_NAME Analysis)
-
-o2_add_dpl_workflow(pid-tpc-tiny
-                    SOURCES pidTPC_tiny.cxx
                     PUBLIC_LINK_LIBRARIES O2::Framework O2::DetectorsBase O2::AnalysisDataModel O2::AnalysisCore
                     COMPONENT_NAME Analysis)
 
@@ -75,7 +55,7 @@ o2_add_dpl_workflow(validation
 
 o2_add_dpl_workflow(event-selection
                     SOURCES eventSelection.cxx
-                    PUBLIC_LINK_LIBRARIES O2::Framework O2::AnalysisDataModel O2::AnalysisCore O2::DetectorsBase O2::CCDB O2::CommonConstants
+                    PUBLIC_LINK_LIBRARIES O2::Framework O2::AnalysisDataModel O2::AnalysisCore O2::DetectorsBase O2::CCDB
                     COMPONENT_NAME Analysis)
 
 o2_add_dpl_workflow(event-selection-qa
@@ -113,7 +93,12 @@ o2_add_dpl_workflow(weak-decay-indices
                     PUBLIC_LINK_LIBRARIES O2::Framework O2::DetectorsBase O2::AnalysisDataModel
                     COMPONENT_NAME Analysis)
 
-o2_add_dpl_workflow(emcal-correction-task
-                    SOURCES emcalCorrectionTask.cxx
-                    PUBLIC_LINK_LIBRARIES O2::Framework O2::AnalysisDataModel O2::AnalysisCore O2::DetectorsBase O2::EMCALBase O2::EMCALReconstruction
+o2_add_dpl_workflow(run2-matcher
+                    SOURCES run2Matcher.cxx
+                    PUBLIC_LINK_LIBRARIES O2::Framework O2::DetectorsBase O2::AnalysisDataModel
+                    COMPONENT_NAME Analysis)
+
+o2_add_dpl_workflow(run3-matcher
+                    SOURCES run3Matcher.cxx
+                    PUBLIC_LINK_LIBRARIES O2::Framework O2::DetectorsBase O2::AnalysisDataModel
                     COMPONENT_NAME Analysis)
