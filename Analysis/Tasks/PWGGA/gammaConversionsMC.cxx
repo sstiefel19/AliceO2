@@ -21,7 +21,6 @@ using namespace o2::framework::expressions;
 
 using tracksAndTPCInfo = soa::Join<aod::Tracks, aod::TracksExtra, aod::pidRespTPCEl, aod::pidRespTPCPi, aod::McTrackLabels>;
 
-
 template <typename T>
 Double_t computePsiPair(T const& theV0)
 {
@@ -57,7 +56,7 @@ struct GammaConversionsMC {
   Configurable<float> fPIDnSigmaAboveElectronLine{"fPIDnSigmaAboveElectronLine", 3., "maximum sigma electron PID for V0 daughter tracks"};
 
   Configurable<float> fPIDnSigmaAbovePionLine{"fPIDnSigmaAbovePionLine", 3., "minimum sigma to be over the pion line for low momentum tracks"}; //case 4: 3.0sigma, 1.0 sigma at high momentum
-  
+
   Configurable<float> fPIDnSigmaAbovePionLineHighP{"fPIDnSigmaAbovePionLineHighP", 1., "minimum sigma to be over the pion line for high momentum tracks"};
 
   Configurable<float> fPIDMinPnSigmaAbovePionLine{"fPIDMinPnSigmaAbovePionLine", 0.4, "minimum track momentum to apply any pion rejection"}; //case 7:  // 0.4 GeV
@@ -131,7 +130,7 @@ struct GammaConversionsMC {
     "kPsiPair",
     "kCosinePA",
     "kPhotonOut"};
-    
+
   void init(InitContext const&)
   {
     TAxis* lXaxis = registry.get<TH1>(HIST("IsPhotonSelected"))->GetXaxis();
@@ -139,7 +138,7 @@ struct GammaConversionsMC {
       lXaxis->SetBinLabel(i + 1, fPhotCutsLabels[i]);
     }
   }
-  
+
   void process(aod::Collision const& theCollision,
                aod::V0Datas const& theV0s,
                tracksAndTPCInfo const& theTracks,
@@ -149,30 +148,30 @@ struct GammaConversionsMC {
       float lPhiV0Rec = static_cast<float>(M_PI) + std::atan2(-lV0.py(), -lV0.px());
 
       fillHistogramsBeforeCuts(lV0, lPhiV0Rec);
-      
+
       auto lTrackPos = lV0.template posTrack_as<tracksAndTPCInfo>(); //positive daughter
       auto lTrackNeg = lV0.template negTrack_as<tracksAndTPCInfo>(); //negative daughter
-      
+
       // apply track cuts
       if (!(trackPassesCuts(lTrackPos) && trackPassesCuts(lTrackNeg))) {
         continue;
       }
-      
+
       Double_t lPsiPair = computePsiPair(lV0); // add this to v0table and take from there
       float lV0CosinePA = RecoDecay::CPA(array{theCollision.posX(), theCollision.posY(), theCollision.posZ()}, array{lV0.x(), lV0.y(), lV0.z()}, array{lV0.px(), lV0.py(), lV0.pz()});
-            
+
       // apply photon cuts
       passesPhotonCuts(lV0, lPsiPair, lV0CosinePA);
-      
+
       fillHistogramsAfterCuts(lV0, lTrackPos, lTrackNeg, lPhiV0Rec, lPsiPair, lV0CosinePA);
-      
+
       processTruePhotons(lV0, lTrackPos, lTrackNeg, theMcParticles, lPhiV0Rec);
-    } 
+    }
   }
-  
+
   template <typename T>
-  void fillHistogramsBeforeCuts(const T &theV0, float thePhiV0Rec)
-  { 
+  void fillHistogramsBeforeCuts(const T& theV0, float thePhiV0Rec)
+  {
     // fill some QA histograms before any cuts
     registry.fill(HIST("beforeCuts/hPtRec_before"), theV0.pt());
     registry.fill(HIST("beforeCuts/hEtaRec_before"), theV0.eta());
@@ -180,9 +179,9 @@ struct GammaConversionsMC {
     registry.fill(HIST("beforeCuts/hConvPointR_before"), theV0.v0radius());
     registry.fill(HIST("IsPhotonSelected"), kPhotonIn);
   }
-  
+
   template <typename T>
-  bool trackPassesCuts(const T &theTrack)
+  bool trackPassesCuts(const T& theTrack)
   {
     // single track eta cut
     if (TMath::Abs(theTrack.eta()) > fEtaCut) {
@@ -201,9 +200,9 @@ struct GammaConversionsMC {
     }
     return kTRUE;
   }
-  
+
   template <typename T>
-  bool passesPhotonCuts(const T &theV0, Double_t thePsiPair, float theV0CosinePA)
+  bool passesPhotonCuts(const T& theV0, Double_t thePsiPair, float theV0CosinePA)
   {
     if (theV0.v0radius() < fMinR || theV0.v0radius() > fMaxR) {
       registry.fill(HIST("IsPhotonSelected"), kV0Radius);
@@ -212,7 +211,8 @@ struct GammaConversionsMC {
 
     if (!ArmenterosQtCut(theV0.alpha(), theV0.qtarm(), theV0.pt())) {
       registry.fill(HIST("IsPhotonSelected"), kArmenteros);
-      return kFALSE;;
+      return kFALSE;
+      ;
     }
 
     if (TMath::Abs(thePsiPair) > fPsiPairCut) {
@@ -221,19 +221,21 @@ struct GammaConversionsMC {
         registry.fill(HIST("hPsiPtRec"), thePsiPair, theV0.pt());
       }
       registry.fill(HIST("IsPhotonSelected"), kPsiPair);
-      return kFALSE;;
+      return kFALSE;
+      ;
     }
 
     if (theV0CosinePA < fCosPAngleCut) {
       registry.fill(HIST("IsPhotonSelected"), kCosinePA);
-      return kFALSE;;
+      return kFALSE;
+      ;
     }
-    
+
     return kTRUE;
   }
-  
+
   template <typename TV0, typename TTRACK>
-  void fillHistogramsAfterCuts(const TV0 &theV0, const TTRACK &theTrackPos, const TTRACK &theTrackNeg, float thePhiV0Rec, float thePsiPair, float theV0CosinePA)
+  void fillHistogramsAfterCuts(const TV0& theV0, const TTRACK& theTrackPos, const TTRACK& theTrackNeg, float thePhiV0Rec, float thePsiPair, float theV0CosinePA)
   {
     registry.fill(HIST("IsPhotonSelected"), kPhotonOut);
 
@@ -253,9 +255,9 @@ struct GammaConversionsMC {
 
     registry.fill(HIST("hCosPAngle"), theV0CosinePA);
   }
-  
+
   template <typename TV0, typename TTRACK, typename TMC>
-  void processTruePhotons(const TV0 &theV0, const TTRACK &theTrackPos, const TTRACK &theTrackNeg, const TMC &theMcParticles, float thePhiV0Rec)
+  void processTruePhotons(const TV0& theV0, const TTRACK& theTrackPos, const TTRACK& theTrackNeg, const TMC& theMcParticles, float thePhiV0Rec)
   {
     // todo: verify it is enough to check only mother0 being equal
     if (theTrackPos.mcParticle().mother0() > -1 &&
@@ -320,7 +322,6 @@ struct GammaConversionsMC {
     }
     return kTRUE;
   }
-
 };
 
 WorkflowSpec defineDataProcessing(ConfigContext const& cfgc)
