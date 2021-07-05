@@ -37,7 +37,7 @@ using tracksAndTPCInfoMC = soa::Join<aod::Tracks, aod::TracksExtra, aod::pidTPCE
 #include "Framework/runDataProcessing.h"
 
 struct GammaConversionsmc {
-  
+
   Configurable<bool> fDoEventSel{"fDoEventSel", 0, "demand sel7 for events"};
 
   Configurable<float> fCentMin{"fCentMin", 0.0, "lower bound of centrality selection"};

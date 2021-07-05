@@ -37,7 +37,7 @@ using tracksAndTPCInfo = soa::Join<aod::Tracks, aod::TracksExtra, aod::pidTPCEl,
 #include "Framework/runDataProcessing.h"
 
 struct GammaConversions {
-  
+
   Configurable<bool> fDoEventSel{"fDoEventSel", 0, "demand kINT7 and sel7 for events"};
 
   Configurable<float> fCentMin{"fCentMin", 0.0, "lower bound of centrality selection"};
@@ -348,5 +348,4 @@ WorkflowSpec defineDataProcessing(ConfigContext const& cfgc)
     return WorkflowSpec{
       adaptAnalysisTask<GammaConversions>(cfgc, Processes{&GammaConversions::processData}),
     };
-  
 }
